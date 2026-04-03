@@ -169,3 +169,16 @@ h1, h2, h3, h4, h5, h6 {
 .colorblind-tritanopia {
   filter: url('#tritanopia');
 }
+
+img {
+  opacity: 1 !important;
+  transition: none;
+}
+
+img {
+  will-change: transform;
+}
+
+.glass-dark {
+  will-change: transform, opacity;
+}

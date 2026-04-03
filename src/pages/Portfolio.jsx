@@ -1,64 +1,191 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Filter, MessageCircle } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { MessageCircle, X, ChevronRight, Camera, Heart, Sparkles, Briefcase, Monitor, Globe } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-const categories = ['All', 'Wedding', 'Lobola', 'Engagement', 'Studio', 'Outdoor', 'Party']
+const categoryData = {
+  Wedding: {
+    icon: Heart,
+    coverImage: '/assets/images/wedding and lobola/DSC08268.jpg',
+    images: [
+      '/assets/images/wedding and lobola/DSC08268.jpg',
+      '/assets/images/wedding and lobola/DSC08266.jpg',
+      '/assets/images/wedding and lobola/DSC08258.jpg',
+      '/assets/images/wedding and lobola/DSC08280.jpg',
+      '/assets/images/wedding and lobola/DSC08281.jpg',
+      '/assets/images/wedding and lobola/DSC08048.jpg',
+      '/assets/images/wedding and lobola/DSC08229.jpg',
+      '/assets/images/wedding and lobola/DSC08226.jpg',
+      '/assets/images/wedding and lobola/DSC08223.jpg',
+      '/assets/images/wedding and lobola/DSC08222.jpg',
+      '/assets/images/wedding and lobola/DSC08195.jpg',
+      '/assets/images/wedding and lobola/DSC08181.jpg',
+      '/assets/images/wedding and lobola/DSC08161.jpg',
+      '/assets/images/wedding and lobola/DSC08141.jpg',
+      '/assets/images/wedding and lobola/DSC08133.jpg',
+      '/assets/images/wedding and lobola/DSC08128.jpg',
+      '/assets/images/wedding and lobola/DSC08061.jpg',
+      '/assets/images/wedding and lobola/DSC08051.jpg',
+      '/assets/images/wedding and lobola/DSC08049.jpg',
+      '/assets/images/wedding and lobola/DSC07990.jpg',
+      '/assets/images/wedding and lobola/DSC07988.jpg',
+      '/assets/images/wedding and lobola/DSC07987.jpg',
+      '/assets/images/wedding and lobola/DSC07980.jpg',
+      '/assets/images/wedding and lobola/DSC08316.jpg',
+      '/assets/images/wedding and lobola/DSC08427.jpg',
+      '/assets/images/wedding and lobola/DSC08424.jpg',
+      '/assets/images/wedding and lobola/DSC08309.jpg',
+      '/assets/images/wedding and lobola/DSC08308.jpg',
+      '/assets/images/wedding and lobola/DSC08301.jpg',
+      '/assets/images/wedding and lobola/DSC08300.jpg',
+      '/assets/images/wedding and lobola/DSC08323.jpg',
+    ],
+  },
+  Engagement: {
+    icon: Sparkles,
+    coverImage: '/assets/images/Engagement/DSC06785.jpg',
+    images: [
+      '/assets/images/Engagement/DSC06785.jpg',
+      '/assets/images/Engagement/DSC06735.jpg',
+      '/assets/images/Engagement/DSC06733.jpg',
+      '/assets/images/Engagement/DSC06731.jpg',
+      '/assets/images/Engagement/DSC06732.jpg',
+      '/assets/images/Engagement/DSC06730.jpg',
+      '/assets/images/Engagement/DSC06728.jpg',
+      '/assets/images/Engagement/DSC06672.jpg',
+      '/assets/images/Engagement/DSC06669.jpg',
+    ],
+  },
+  Studio: {
+    icon: Camera,
+    coverImage: '/assets/images/studio/DSC02501.jpg',
+    images: [
+      '/assets/images/studio/DSC02501.jpg',
+      '/assets/images/studio/DSC02497.jpg',
+      '/assets/images/studio/DSC02491.jpg',
+      '/assets/images/studio/DSC02486.jpg',
+      '/assets/images/studio/DSC02489.jpg',
+      '/assets/images/studio/DSC02481.jpg',
+      '/assets/images/studio/DSC02479.jpg',
+      '/assets/images/studio/DSC02478.jpg',
+      '/assets/images/studio/DSC02471.jpg',
+      '/assets/images/studio/DSC02458.jpg',
+      '/assets/images/studio/DSC02451.jpg',
+      '/assets/images/studio/DSC02444.jpg',
+      '/assets/images/studio/DSC02443.jpg',
+    ],
+  },
+  Outdoor: {
+    icon: Globe,
+    coverImage: '/assets/images/outdoor/DSC03875.jpg',
+    images: [
+      '/assets/images/outdoor/DSC03875.jpg',
+      '/assets/images/outdoor/DSC03866.jpg',
+      '/assets/images/outdoor/DSC03858.jpg',
+      '/assets/images/outdoor/DSC03855.jpg',
+      '/assets/images/outdoor/DSC03852.jpg',
+      '/assets/images/outdoor/DSC03847.jpg',
+      '/assets/images/outdoor/DSC03846.jpg',
+      '/assets/images/outdoor/DSC03839.jpg',
+      '/assets/images/outdoor/DSC03837.jpg',
+      '/assets/images/outdoor/DSC03833.jpg',
+      '/assets/images/outdoor/DSC03830.jpg',
+      '/assets/images/outdoor/DSC03819.jpg',
+      '/assets/images/outdoor/DSC03813.jpg',
+      '/assets/images/outdoor/DSC03805.jpg',
+      '/assets/images/outdoor/DSC03803.jpg',
+      '/assets/images/outdoor/DSC03802.jpg',
+      '/assets/images/outdoor/DSC03801.jpg',
+      '/assets/images/outdoor/DSC03800.jpg',
+      '/assets/images/outdoor/DSC03733.jpg',
+      '/assets/images/outdoor/DSC03717.jpg',
+      '/assets/images/outdoor/DSC03715.jpg',
+      '/assets/images/outdoor/DSC03670.jpg',
+      '/assets/images/outdoor/DSC03668.jpg',
+      '/assets/images/outdoor/DSC03667.jpg',
+      '/assets/images/outdoor/DSC03661.jpg',
+      '/assets/images/outdoor/DSC03660.jpg',
+      '/assets/images/outdoor/DSC03643.jpg',
+      '/assets/images/outdoor/DSC03637.jpg',
+      '/assets/images/outdoor/DSC03683.jpg',
+      '/assets/images/outdoor/DSC03678.jpg',
+      '/assets/images/outdoor/DSC03674.jpg',
+    ],
+  },
+  Party: {
+    icon: Briefcase,
+    coverImage: '/assets/images/party/DSC01304.jpg',
+    images: [
+      '/assets/images/party/DSC01304.jpg',
+      '/assets/images/party/DSC01352.jpg',
+      '/assets/images/party/DSC01350.jpg',
+      '/assets/images/party/DSC01490.jpg',
+      '/assets/images/party/DSC01353.jpg',
+      '/assets/images/party/DSC01345.jpg',
+      '/assets/images/party/DSC01303.jpg',
+      '/assets/images/party/DSC01299.jpg',
+      '/assets/images/party/DSC01287.jpg',
+      '/assets/images/party/DSC01286.jpg',
+      '/assets/images/party/DSC01260.jpg',
+      '/assets/images/party/DSC01256.jpg',
+      '/assets/images/party/DSC01254.jpg',
+      '/assets/images/party/DSC01237.jpg',
+      '/assets/images/party/DSC01235.jpg',
+      '/assets/images/party/DSC01232.jpg',
+      '/assets/images/party/DSC01227.jpg',
+      '/assets/images/party/DSC01489.jpg',
+      '/assets/images/party/DSC01480.jpg',
+    ],
+  },
+}
 
-const localImages = {
-  Wedding: [
-    { id: 1, title: 'Wedding Celebration', img: '/src/assets/images/wedding and lobola/DSC08268.jpg' },
-    { id: 2, title: 'Traditional Ceremony', img: '/src/assets/images/wedding and lobola/DSC08048.jpg' },
-    { id: 3, title: 'Reception Highlights', img: '/src/assets/images/wedding and lobola/DSC08226.jpg' },
-    { id: 4, title: 'Couple Portrait', img: '/src/assets/images/wedding and lobola/DSC07980.jpg' },
-    { id: 5, title: 'First Dance', img: '/src/assets/images/wedding and lobola/DSC08229.jpg' },
-    { id: 6, title: 'Wedding Details', img: '/src/assets/images/wedding and lobola/DSC08223.jpg' },
-    { id: 7, title: 'Celebration', img: '/src/assets/images/wedding and lobola/DSC08427.jpg' },
-    { id: 8, title: 'Couple Moments', img: '/src/assets/images/wedding and lobola/DSC08300.jpg' },
-  ],
-  Lobola: [
-    { id: 9, title: 'Lobola Ceremony', img: '/src/assets/images/wedding and lobola/DSC08195.jpg' },
-    { id: 10, title: 'Family Gathering', img: '/src/assets/images/wedding and lobola/DSC08161.jpg' },
-    { id: 11, title: 'Traditional Vows', img: '/src/assets/images/wedding and lobola/DSC08049.jpg' },
-    { id: 12, title: 'Celebration', img: '/src/assets/images/wedding and lobola/DSC07990.jpg' },
-  ],
-  Engagement: [
-    { id: 13, title: 'Engagement Session', img: '/src/assets/images/Engagement/DSC06785.jpg' },
-    { id: 14, title: 'Outdoor Shoot', img: '/src/assets/images/Engagement/DSC06735.jpg' },
-    { id: 15, title: 'Romantic Moments', img: '/src/assets/images/Engagement/DSC06733.jpg' },
-    { id: 16, title: 'Creative Portraits', img: '/src/assets/images/Engagement/DSC06731.jpg' },
-  ],
-  Studio: [
-    { id: 17, title: 'Studio Portrait', img: '/src/assets/images/studio/DSC02501.jpg' },
-    { id: 18, title: 'Professional Headshot', img: '/src/assets/images/studio/DSC02497.jpg' },
-    { id: 19, title: 'Creative Session', img: '/src/assets/images/studio/DSC02491.jpg' },
-    { id: 20, title: 'Portfolio Work', img: '/src/assets/images/studio/DSC02486.jpg' },
-  ],
-  Outdoor: [
-    { id: 21, title: 'Outdoor Adventure', img: '/src/assets/images/outdoor/DSC03875.jpg' },
-    { id: 22, title: 'Natural Beauty', img: '/src/assets/images/outdoor/DSC03866.jpg' },
-    { id: 23, title: 'Golden Hour', img: '/src/assets/images/outdoor/DSC03858.jpg' },
-    { id: 24, title: 'Landscape Portraits', img: '/src/assets/images/outdoor/DSC03855.jpg' },
-  ],
-  Party: [
-    { id: 25, title: 'Party Vibes', img: '/src/assets/images/party/DSC01304.jpg' },
-    { id: 26, title: 'Celebration Moments', img: '/src/assets/images/party/DSC01352.jpg' },
-    { id: 27, title: 'Event Highlights', img: '/src/assets/images/party/DSC01350.jpg' },
-    { id: 28, title: 'Party Fun', img: '/src/assets/images/party/DSC01490.jpg' },
-  ],
+function Lightbox({ images, currentIndex, onClose, onNext, onPrev }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 bg-brand-dark/95 backdrop-blur-sm flex items-center justify-center"
+      onClick={onClose}
+    >
+      <button onClick={onClose} className="absolute top-4 right-4 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors z-10">
+        <X className="w-6 h-6" />
+      </button>
+      <button onClick={(e) => { e.stopPropagation(); onPrev(); }} className="absolute left-4 p-3 bg-white/10 rounded-full hover:bg-white/20 transition-colors">
+        <ChevronRight className="w-6 h-6 rotate-180" />
+      </button>
+      <motion.img
+        key={currentIndex}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        src={images[currentIndex]}
+        alt=""
+        className="max-w-[90vw] max-h-[85vh] object-contain rounded-lg"
+        onClick={(e) => e.stopPropagation()}
+      />
+      <button onClick={(e) => { e.stopPropagation(); onNext(); }} className="absolute right-4 p-3 bg-white/10 rounded-full hover:bg-white/20 transition-colors">
+        <ChevronRight className="w-6 h-6" />
+      </button>
+      <div className="absolute bottom-4 text-white/60 text-sm">{currentIndex + 1} / {images.length}</div>
+    </motion.div>
+  )
 }
 
 export default function Portfolio() {
-  const [activeFilter, setActiveFilter] = useState('All')
+  const [expandedCategory, setExpandedCategory] = useState(null)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentImages, setCurrentImages] = useState([])
 
-  const getFilteredItems = () => {
-    if (activeFilter === 'All') {
-      return Object.values(localImages).flat()
-    }
-    return localImages[activeFilter] || []
+  const openLightbox = (category, index) => {
+    setCurrentImages(categoryData[category].images)
+    setCurrentIndex(index)
+    setLightboxOpen(true)
   }
 
-  const filteredItems = getFilteredItems()
+  const closeLightbox = () => setLightboxOpen(false)
+  const nextImage = () => setCurrentIndex((prev) => (prev + 1) % currentImages.length)
+  const prevImage = () => setCurrentIndex((prev) => (prev - 1 + currentImages.length) % currentImages.length)
 
   return (
     <div className="pt-24 pb-20">
@@ -69,83 +196,105 @@ export default function Portfolio() {
         </div>
         
         <div className="max-w-7xl mx-auto px-4 relative z-10">
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-16"
-          >
+          <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
             <span className="text-brand-gold text-sm font-semibold tracking-widest uppercase">Our Work</span>
-            <h1 className="text-5xl md:text-6xl font-black mt-4 mb-6">
-              FEATURED <span className="gradient-text">PORTFOLIO</span>
-            </h1>
-            <p className="text-white/60 max-w-2xl mx-auto text-lg">
-              Explore our recent work and see why we're Zimbabwe's trusted choice for photography and videography
-            </p>
+            <h1 className="text-5xl md:text-6xl font-black mt-4 mb-6">FEATURED <span className="gradient-text">PORTFOLIO</span></h1>
+            <p className="text-white/60 max-w-2xl mx-auto text-lg">Click on a category to explore our work</p>
           </motion.div>
 
-          <div className="flex flex-wrap justify-center gap-3 mb-16">
-            {categories.map((category) => (
-              <motion.button
-                key={category}
-                onClick={() => setActiveFilter(category)}
-                className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                  activeFilter === category 
-                    ? 'bg-brand-gold text-brand-dark shadow-lg shadow-brand-gold/30' 
-                    : 'glass-dark text-white/70 hover:text-white hover:bg-white/10'
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {category}
-              </motion.button>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Object.entries(categoryData).map(([category, data], index) => {
+              const Icon = data.icon
+              const isExpanded = expandedCategory === category
+              
+              return (
+                <motion.div
+                  key={category}
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  layout
+                  className={`rounded-2xl overflow-hidden transition-all duration-500 ${
+                    isExpanded ? 'md:col-span-2 lg:col-span-3' : ''
+                  }`}
+                >
+                  <motion.div
+                    className="relative cursor-pointer group"
+                    onClick={() => setExpandedCategory(isExpanded ? null : category)}
+                    layout
+                  >
+                    <div className={`relative ${isExpanded ? 'aspect-[21/9]' : 'aspect-[4/3]'}`}>
+                      <img 
+                        src={isExpanded ? data.images[0] : data.coverImage}
+                        alt={category}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/30 to-transparent" />
+                      <div className="absolute inset-0 bg-brand-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <div className="w-16 h-16 rounded-full bg-brand-gold flex items-center justify-center transform scale-0 group-hover:scale-100 transition-transform">
+                          <Icon className="w-8 h-8 text-brand-dark" />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="text-2xl font-black">{category}</h3>
+                          <p className="text-white/70 text-sm">{data.images.length} photos</p>
+                        </div>
+                        <ChevronRight className={`w-6 h-6 text-brand-gold transition-transform duration-300 ${isExpanded ? 'rotate-90' : ''}`} />
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="bg-brand-dark"
+                      >
+                        <div className="p-6">
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                            {data.images.map((img, i) => (
+                              <motion.div
+                                key={img}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: i * 0.02 }}
+                                className="relative aspect-square rounded-lg overflow-hidden cursor-pointer group"
+                                onClick={() => openLightbox(category, i)}
+                              >
+                                <img 
+                                  src={img} 
+                                  alt=""
+                                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                                  
+                                />
+                                <div className="absolute inset-0 bg-brand-gold/0 group-hover:bg-brand-gold/30 transition-colors flex items-center justify-center">
+                                  <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <Camera className="w-5 h-5" />
+                                  </div>
+                                </div>
+                              </motion.div>
+                            ))}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              )
+            })}
           </div>
-
-          <motion.div 
-            layout
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-          >
-            {filteredItems.map((item, index) => (
-              <motion.div
-                key={item.id}
-                layout
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ delay: index * 0.03 }}
-                className="group relative overflow-hidden rounded-2xl aspect-[3/4] card-3d"
-              >
-                <img 
-                  src={item.img} 
-                  alt={item.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  onError={(e) => { 
-                    e.target.style.display = 'none'; 
-                    e.target.parentElement.style.background = '#1B4D3E';
-                  }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500">
-                  <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-4 group-hover:translate-y-0 transition-transform">
-                    <p className="text-brand-gold text-sm font-semibold uppercase tracking-wider mb-1">{activeFilter}</p>
-                    <h3 className="text-white text-lg font-bold">{item.title}</h3>
-                  </div>
-                </div>
-                <div className="absolute inset-0 border-2 border-transparent group-hover:border-brand-gold/50 rounded-2xl transition-colors duration-300" />
-              </motion.div>
-            ))}
-          </motion.div>
 
           <div className="mt-16 text-center">
             <p className="text-white/60 mb-6">Interested in working with us?</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="https://wa.me/263773830904"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-whatsapp inline-flex items-center justify-center space-x-2"
-              >
-                <MessageCircle className="w-5 h-5" />
-                <span>WhatsApp Us</span>
+              <a href="https://wa.me/263773830904" target="_blank" rel="noopener noreferrer" className="btn-whatsapp inline-flex items-center justify-center space-x-2">
+                <MessageCircle className="w-5 h-5" /><span>WhatsApp Us</span>
               </a>
               <Link to="/contact" className="btn-primary inline-flex items-center justify-center space-x-2">
                 <span>Get a Quote</span>
@@ -154,6 +303,18 @@ export default function Portfolio() {
           </div>
         </div>
       </section>
+
+      <AnimatePresence>
+        {lightboxOpen && (
+          <Lightbox 
+            images={currentImages} 
+            currentIndex={currentIndex} 
+            onClose={closeLightbox}
+            onNext={nextImage}
+            onPrev={prevImage}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }

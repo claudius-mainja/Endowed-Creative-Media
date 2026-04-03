@@ -1,6 +1,14 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Mail, Phone, MapPin, Send, CheckCircle, MessageCircle } from 'lucide-react'
+import { useEffect } from 'react'
+
+const heroImages = [
+  '/assets/images/wedding and lobola/DSC08268.jpg',
+  '/assets/images/Engagement/DSC06785.jpg',
+  '/assets/images/studio/DSC02501.jpg',
+  '/assets/images/outdoor/DSC03875.jpg',
+]
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -12,6 +20,14 @@ export default function Contact() {
   })
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length)
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -54,6 +70,53 @@ export default function Contact() {
 
   return (
     <div className="pt-24 pb-20">
+      <section className="min-h-[50vh] relative flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden">
+          {heroImages.map((img, index) => (
+            <motion.div
+              key={img}
+              className="absolute inset-0"
+              initial={{ opacity: 0, scale: 1.3, rotate: index * 5 }}
+              animate={{ 
+                opacity: currentImageIndex === index ? 0.35 : 0,
+                scale: currentImageIndex === index ? 1 : 1.3,
+                rotate: currentImageIndex === index ? 0 : index * 5,
+                x: currentImageIndex === index ? 0 : (index % 2 === 0 ? 100 : -100),
+                y: currentImageIndex === index ? 0 : (index % 2 === 0 ? -50 : 50),
+              }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+            >
+              <img 
+                src={img} 
+                alt=""
+                className="w-full h-full object-cover"
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+            </motion.div>
+          ))}
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/70 via-brand-dark/50 to-brand-dark" />
+        </div>
+
+        <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <span className="inline-block px-6 py-2 glass rounded-full text-brand-gold text-sm font-semibold tracking-wider uppercase mb-6">
+              Get In Touch
+            </span>
+            <h1 className="text-5xl md:text-7xl font-black mb-6 leading-none">
+              <span className="text-white">CONTACT</span>
+              <br />
+              <span className="gradient-text">US</span>
+            </h1>
+            <p className="text-xl text-white/70 max-w-2xl mx-auto">
+              Get in touch with us for a free consultation and quote
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
       <section className="py-20 relative overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-20 right-20 w-72 h-72 bg-brand-gold/5 rounded-full blur-3xl" />
@@ -61,20 +124,6 @@ export default function Contact() {
         </div>
         
         <div className="max-w-7xl mx-auto px-4 relative z-10">
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-16"
-          >
-            <span className="text-brand-gold text-sm font-semibold tracking-widest uppercase">Get In Touch</span>
-            <h1 className="text-5xl md:text-6xl font-black mt-4 mb-6">
-              CONTACT <span className="gradient-text">US</span>
-            </h1>
-            <p className="text-white/60 max-w-2xl mx-auto text-lg">
-              Get in touch with us for a free consultation and quote
-            </p>
-          </motion.div>
-
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             <motion.div 
               initial={{ opacity: 0, x: -30 }}

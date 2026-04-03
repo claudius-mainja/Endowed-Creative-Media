@@ -1,23 +1,34 @@
 import { Link } from 'react-router-dom'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Camera, Video, Heart, Briefcase, Sparkles, ArrowRight, MessageCircle } from 'lucide-react'
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 
-const fadeInUp = {
-  initial: { opacity: 0, y: 40 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }
-}
+const heroImages = [
+  '/assets/images/wedding and lobola/DSC08268.jpg',
+  '/assets/images/Engagement/DSC06785.jpg',
+  '/assets/images/studio/DSC02501.jpg',
+  '/assets/images/outdoor/DSC03875.jpg',
+]
 
-const localImages = [
-  '/src/assets/images/wedding and lobola/DSC08268.jpg',
-  '/src/assets/images/Engagement/DSC06785.jpg',
-  '/src/assets/images/studio/DSC02501.jpg',
-  '/src/assets/images/outdoor/DSC03875.jpg',
+const featuredGalleryImages = [
+  { src: '/assets/images/wedding and lobola/DSC08268.jpg', alt: 'Wedding Photography' },
+  { src: '/assets/images/wedding and lobola/DSC08048.jpg', alt: 'Traditional Ceremony' },
+  { src: '/assets/images/Engagement/DSC06785.jpg', alt: 'Engagement Session' },
+  { src: '/assets/images/studio/DSC02501.jpg', alt: 'Studio Portrait' },
+  { src: '/assets/images/wedding and lobola/DSC08226.jpg', alt: 'Wedding Moments' },
+  { src: '/assets/images/outdoor/DSC03875.jpg', alt: 'Outdoor Shoot' },
+  { src: '/assets/images/party/DSC01304.jpg', alt: 'Event Coverage' },
+  { src: '/assets/images/wedding and lobola/DSC07980.jpg', alt: 'Celebration' },
+  { src: '/assets/images/Engagement/DSC06735.jpg', alt: 'Couple Portraits' },
+  { src: '/assets/images/wedding and lobola/DSC08300.jpg', alt: 'Wedding Details' },
+  { src: '/assets/images/studio/DSC02497.jpg', alt: 'Professional Headshots' },
+  { src: '/assets/images/wedding and lobola/DSC08427.jpg', alt: 'Reception' },
 ]
 
 export default function Home() {
   const containerRef = useRef(null)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"]
@@ -26,15 +37,42 @@ export default function Home() {
   const y = useTransform(scrollYProgress, [0, 1], [0, 200])
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length)
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <div className="pt-20" ref={containerRef}>
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 gradient-bg opacity-10" />
+        <div className="absolute inset-0 gradient-bg opacity-20" />
         
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-brand-gold/10 rounded-full blur-3xl floating" />
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-brand-blue/10 rounded-full blur-3xl floating" style={{ animationDelay: '2s' }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-green/5 rounded-full blur-3xl" />
+        <div className="absolute inset-0 overflow-hidden">
+          {heroImages.map((img, index) => (
+            <motion.div
+              key={img}
+              className="absolute inset-0"
+              initial={{ opacity: 0, scale: 1.3, rotate: index * 5 }}
+              animate={{ 
+                opacity: currentImageIndex === index ? 0.4 : 0,
+                scale: currentImageIndex === index ? 1 : 1.3,
+                rotate: currentImageIndex === index ? 0 : index * 5,
+                x: currentImageIndex === index ? 0 : (index % 2 === 0 ? 100 : -100),
+                y: currentImageIndex === index ? 0 : (index % 2 === 0 ? -50 : 50),
+              }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+            >
+              <img 
+                src={img} 
+                alt=""
+                className="w-full h-full object-cover"
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+            </motion.div>
+          ))}
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/60 via-brand-dark/40 to-brand-dark" />
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
@@ -66,7 +104,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-xl md:text-2xl text-white/70 mb-12 max-w-3xl mx-auto font-light"
+            className="text-xl md:text-2xl text-white/80 mb-12 max-w-3xl mx-auto font-light"
           >
             Zimbabwe's premier photography and videography studio. We transform your precious moments into timeless visual masterpieces.
           </motion.p>
@@ -108,8 +146,7 @@ export default function Home() {
       </section>
 
       <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 glass-dark" />
-        <div className="max-w-7xl mx-auto px-4 relative z-10">
+        <div className="max-w-7xl mx-auto px-4">
           <motion.div 
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -125,12 +162,12 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { icon: Heart, title: 'Wedding Photography', desc: 'Capture your special day with stunning, cinematic visuals that tell your unique love story', img: '/src/assets/images/wedding and lobola/DSC08268.jpg' },
-              { icon: Video, title: 'Videography', desc: 'Professional video production for all events, from intimate gatherings to grand celebrations', img: '/src/assets/images/outdoor/DSC03875.jpg' },
-              { icon: Camera, title: 'Engagement Shoots', desc: 'Creative pre-wedding photography sessions to celebrate your engagement in stunning locations', img: '/src/assets/images/Engagement/DSC06785.jpg' },
-              { icon: Briefcase, title: 'Corporate Media', desc: 'Business events, conferences, product launches, and professional brand content', img: '/src/assets/images/studio/DSC02501.jpg' },
-              { icon: Sparkles, title: 'Lobola & Traditional', desc: 'Respectful documentation of your cultural celebrations with attention to tradition', img: '/src/assets/images/wedding and lobola/DSC08048.jpg' },
-              { icon: Video, title: 'Livestream Services', desc: 'Live broadcast your events to reach audiences anywhere in the world', img: '/src/assets/images/party/DSC01304.jpg' },
+              { icon: Heart, title: 'Wedding Photography', desc: 'Capture your special day with stunning, cinematic visuals that tell your unique love story', img: '/assets/images/wedding and lobola/DSC08268.jpg' },
+              { icon: Video, title: 'Videography', desc: 'Professional video production for all events, from intimate gatherings to grand celebrations', img: '/assets/images/outdoor/DSC03875.jpg' },
+              { icon: Camera, title: 'Engagement Shoots', desc: 'Creative pre-wedding photography sessions to celebrate your engagement in stunning locations', img: '/assets/images/Engagement/DSC06785.jpg' },
+              { icon: Briefcase, title: 'Corporate Media', desc: 'Business events, conferences, product launches, and professional brand content', img: '/assets/images/studio/DSC02501.jpg' },
+              { icon: Sparkles, title: 'Lobola & Traditional', desc: 'Respectful documentation of your cultural celebrations with attention to tradition', img: '/assets/images/wedding and lobola/DSC08048.jpg' },
+              { icon: Video, title: 'Livestream Services', desc: 'Live broadcast your events to reach audiences anywhere in the world', img: '/assets/images/party/DSC01304.jpg' },
             ].map((service, index) => (
               <motion.div
                 key={service.title}
@@ -147,15 +184,15 @@ export default function Home() {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.classList.add('bg-brand-green/30'); }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/50 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/70 to-transparent" />
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <div className="w-12 h-12 rounded-xl bg-brand-gold/20 backdrop-blur flex items-center justify-center mb-4 group-hover:bg-brand-gold group-hover:scale-110 transition-all duration-300">
-                    <service.icon className="w-6 h-6 text-brand-gold group-hover:text-brand-dark" />
+                <div className="absolute inset-0 flex flex-col justify-end p-6">
+                  <div className="w-12 h-12 rounded-xl bg-brand-gold/20 backdrop-blur flex items-center justify-center mb-4">
+                    <service.icon className="w-6 h-6 text-brand-gold" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2 tracking-wide">{service.title}</h3>
-                  <p className="text-white/60 text-sm mb-4 opacity-0 group-hover:opacity-100 transition-opacity">{service.desc}</p>
-                  <Link to="/services" className="inline-flex items-center text-brand-gold text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                  <h3 className="text-xl font-bold mb-2 tracking-wide text-white">{service.title}</h3>
+                  <p className="text-white/80 text-sm mb-4">{service.desc}</p>
+                  <Link to="/services" className="inline-flex items-center text-brand-gold text-sm font-semibold">
                     Learn More <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
                 </div>
@@ -177,7 +214,7 @@ export default function Home() {
               <div className="relative">
                 <div className="absolute -top-6 -left-6 w-full h-full border-2 border-brand-gold/30 rounded-2xl" />
                 <img 
-                  src="/src/assets/images/wedding and lobola/DSC08268.jpg"
+                  src="/assets/images/wedding and lobola/DSC08268.jpg"
                   alt="Wedding photography"
                   className="rounded-2xl w-full shadow-2xl"
                   onError={(e) => { e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><rect fill="%231B4D3E" width="600" height="400"/></svg>'; }}
@@ -273,17 +310,8 @@ export default function Home() {
             <h2 className="text-4xl md:text-5xl font-black mt-4">Featured Gallery</h2>
           </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              '/src/assets/images/wedding and lobola/DSC08268.jpg',
-              '/src/assets/images/Engagement/DSC06785.jpg',
-              '/src/assets/images/wedding and lobola/DSC08048.jpg',
-              '/src/assets/images/studio/DSC02501.jpg',
-              '/src/assets/images/wedding and lobola/DSC08226.jpg',
-              '/src/assets/images/party/DSC01304.jpg',
-              '/src/assets/images/outdoor/DSC03875.jpg',
-              '/src/assets/images/wedding and lobola/DSC07980.jpg',
-            ].map((img, index) => (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {featuredGalleryImages.map((img, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -291,19 +319,21 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
                 className={`relative overflow-hidden rounded-xl card-3d ${
-                  index === 0 || index === 5 ? 'md:col-span-2 md:row-span-2' : ''
-                }`}
+                  index === 0 ? 'md:col-span-2 md:row-span-2' : ''
+                } ${index === 5 ? 'md:col-span-2' : ''}`}
               >
                 <img 
-                  src={img}
-                  alt={`Portfolio ${index + 1}`}
+                  src={img.src}
+                  alt={img.alt}
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                   onError={(e) => { 
                     e.target.style.display = 'none'; 
                     e.target.parentElement.style.background = '#1B4D3E';
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/60 to-transparent opacity-0 hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/60 to-transparent opacity-0 hover:opacity-100 transition-opacity flex items-end p-4">
+                  <p className="text-white font-semibold text-sm">{img.alt}</p>
+                </div>
               </motion.div>
             ))}
           </div>
